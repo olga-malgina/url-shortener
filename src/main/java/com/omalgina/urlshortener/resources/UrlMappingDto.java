@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Table
 @Data
 @NoArgsConstructor
-public class UrlMappingDO {
+public class UrlMappingDto {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
@@ -19,7 +19,7 @@ public class UrlMappingDO {
     @Column
     private String url;
 
-    public UrlMappingDO(String hash, String url) {
+    public UrlMappingDto(String hash, String url) {
         this.hash = hash;
         this.url = url;
     }

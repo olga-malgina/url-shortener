@@ -24,11 +24,8 @@ public class UrlResolverController {
 
     @GetMapping(path = HASH_URL)
     ResponseEntity<Entity> getHash(@RequestParam String url) throws Siren4JException {
-        String hash = urlShortenerService.getUrlHash(url);
-        UrlMapping dummy = new UrlMapping(url, hash);
-        ResourceConverter converter = ReflectingConverter.newInstance();
-        Entity dummyResponse = converter.toEntity(dummy);
-        return new ResponseEntity<>(dummyResponse, HttpStatus.OK);
+        UrlMapping response = urlShortenerService.getUrlHash(url);
+        return new ResponseEntity<>(convertToSirenEntity(response), HttpStatus.OK);
     }
 
     @GetMapping(path = FULL_URL)
@@ -37,9 +34,12 @@ public class UrlResolverController {
         if (mapping == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        ResourceConverter converter = ReflectingConverter.newInstance();
-        Entity response = converter.toEntity(mapping);
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        return new ResponseEntity<>(convertToSirenEntity(mapping), HttpStatus.OK);
+    }
+
+    private Entity convertToSirenEntity(UrlMapping mapping) throws Siren4JException {
+        ResourceConverter sirenConverter = ReflectingConverter.newInstance();
+        return sirenConverter.toEntity(mapping);
     }
 
 }

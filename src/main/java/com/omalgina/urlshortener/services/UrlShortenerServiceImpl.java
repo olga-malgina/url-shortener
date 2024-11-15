@@ -4,7 +4,7 @@ import com.fasterxml.uuid.Generators;
 import com.github.f4b6a3.uuid.codec.base.Base62Codec;
 import com.omalgina.urlshortener.repositories.UrlMappingRepository;
 import com.omalgina.urlshortener.resources.UrlMapping;
-import com.omalgina.urlshortener.resources.UrlMappingDO;
+import com.omalgina.urlshortener.resources.UrlMappingDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,25 +16,30 @@ public class UrlShortenerServiceImpl implements UrlShortenerService {
     @Autowired
     UrlMappingRepository repository;
 
-    public String getUrlHash(String fullUrl) {
-        UrlMappingDO existingMapping = repository.findByUrl(fullUrl);
+    public UrlMapping getUrlHash(String fullUrl) {
+        UrlMappingDto existingMapping = repository.findByUrl(fullUrl);
         if (existingMapping != null) {
-            return existingMapping.getHash();
+            return toUrlMapping(existingMapping);
         }
-        UUID uuid = Generators.timeBasedGenerator().generate();
-        String hash = Base62Codec.INSTANCE.encode(uuid).substring(0, 8);
-        UrlMappingDO urlMapping = new UrlMappingDO(hash, fullUrl);
-        repository.save(urlMapping);
-        return hash;
+        String hash = generateHash();
+//        UrlMappingDto urlMapping = new UrlMappingDto(hash, fullUrl);
+        UrlMappingDto urlMapping = repository.save(new UrlMappingDto(hash, fullUrl));
+//        repository.save(urlMapping);
+        return toUrlMapping(urlMapping);
     }
 
     public UrlMapping getFullUrl(String hash) {
-        UrlMappingDO mapping = repository.findByHash(hash);
+        UrlMappingDto mapping = repository.findByHash(hash);
         return mapping == null ? null : toUrlMapping(mapping);
     }
 
-    private UrlMapping toUrlMapping(UrlMappingDO urlMappingDO) {
-        return new UrlMapping(urlMappingDO.getUrl(), urlMappingDO.getHash());
+    private String generateHash() {
+        UUID uuid = Generators.timeBasedGenerator().generate();
+        return Base62Codec.INSTANCE.encode(uuid).substring(0, 8);
+    }
+
+    private UrlMapping toUrlMapping(UrlMappingDto urlMappingDto) {
+        return new UrlMapping(urlMappingDto.getUrl(), urlMappingDto.getHash());
     }
 
 }

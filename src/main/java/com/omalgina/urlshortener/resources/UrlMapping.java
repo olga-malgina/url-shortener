@@ -11,6 +11,6 @@ import lombok.EqualsAndHashCode;
 @Data
 @Siren4JEntity(name = "urlMapping", uri = "/mappings/{fullUrl}")
 public class UrlMapping extends BaseResource {
-    String fullUrl;
     String shortUrl;
+    String fullUrl;
 }
