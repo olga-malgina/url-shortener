@@ -3,6 +3,7 @@ package com.omalgina.urlshortener.services;
 import com.fasterxml.uuid.Generators;
 import com.github.f4b6a3.uuid.codec.base.Base62Codec;
 import com.omalgina.urlshortener.repositories.UrlMappingRepository;
+import com.omalgina.urlshortener.resources.UrlMapping;
 import com.omalgina.urlshortener.resources.UrlMappingDO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,6 +26,15 @@ public class UrlShortenerServiceImpl implements UrlShortenerService {
         UrlMappingDO urlMapping = new UrlMappingDO(hash, fullUrl);
         repository.save(urlMapping);
         return hash;
+    }
+
+    public UrlMapping getFullUrl(String hash) {
+        UrlMappingDO mapping = repository.findByHash(hash);
+        return mapping == null ? null : toUrlMapping(mapping);
+    }
+
+    private UrlMapping toUrlMapping(UrlMappingDO urlMappingDO) {
+        return new UrlMapping(urlMappingDO.getUrl(), urlMappingDO.getHash());
     }
 
 }

@@ -8,4 +8,6 @@ import org.springframework.stereotype.Repository;
 public interface UrlMappingRepository extends JpaRepository<UrlMappingDO, String> {
 
     UrlMappingDO findByUrl(String url);
+
+    UrlMappingDO findByHash(String hash);
 }

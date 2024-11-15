@@ -33,10 +33,13 @@ public class UrlResolverController {
 
     @GetMapping(path = FULL_URL)
     ResponseEntity<Entity> getFullUrl(@RequestParam String hash) throws Siren4JException {
-        UrlMapping dummy = new UrlMapping("https://www.some.url", hash);
+        UrlMapping mapping = urlShortenerService.getFullUrl(hash);
+        if (mapping == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
         ResourceConverter converter = ReflectingConverter.newInstance();
-        Entity dummyResponse = converter.toEntity(dummy);
-        return new ResponseEntity<>(dummyResponse, HttpStatus.OK);
+        Entity response = converter.toEntity(mapping);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
 }
