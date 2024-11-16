@@ -22,9 +22,7 @@ public class UrlShortenerServiceImpl implements UrlShortenerService {
             return toUrlMapping(existingMapping);
         }
         String hash = generateHash();
-//        UrlMappingDto urlMapping = new UrlMappingDto(hash, fullUrl);
         UrlMappingDto urlMapping = repository.save(new UrlMappingDto(hash, fullUrl));
-//        repository.save(urlMapping);
         return toUrlMapping(urlMapping);
     }
 
@@ -39,7 +37,7 @@ public class UrlShortenerServiceImpl implements UrlShortenerService {
     }
 
     private UrlMapping toUrlMapping(UrlMappingDto urlMappingDto) {
-        return new UrlMapping(urlMappingDto.getUrl(), urlMappingDto.getHash());
+        return new UrlMapping(urlMappingDto.getHash(), urlMappingDto.getUrl());
     }
 
 }

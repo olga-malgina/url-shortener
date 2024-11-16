@@ -10,7 +10,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.boot.test.mock.mockito.MockBean;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
@@ -27,7 +26,7 @@ public class UrlShortenerServiceImplTest {
     private final String URL = "www.test.com";
     private final String HASH = "hash";
     private final UrlMappingDto MAPPING_DTO = new UrlMappingDto(URL, HASH);
-    private final UrlMapping MAPPING = new UrlMapping(HASH, URL);
+    private final UrlMapping MAPPING = new UrlMapping(URL, HASH);
 
     @Test
     void testGetUrlHashNew() {
@@ -35,7 +34,7 @@ public class UrlShortenerServiceImplTest {
         UrlMapping savedMapping = urlShortenerService.getUrlHash(URL);
         verify(repository, times(1)).findByUrl(URL);
         Assertions.assertEquals(MAPPING.getFullUrl(), savedMapping.getFullUrl());
-        Assertions.assertEquals(MAPPING.getShortUrl(), savedMapping.getShortUrl());
+        Assertions.assertEquals(MAPPING.getHash(), savedMapping.getHash());
     }
 
     @Test
@@ -44,7 +43,7 @@ public class UrlShortenerServiceImplTest {
         UrlMapping foundMapping = urlShortenerService.getUrlHash(URL);
         verify(repository, times(1)).findByUrl(URL);
         Assertions.assertEquals(MAPPING.getFullUrl(), foundMapping.getFullUrl());
-        Assertions.assertEquals(MAPPING.getShortUrl(), foundMapping.getShortUrl());
+        Assertions.assertEquals(MAPPING.getHash(), foundMapping.getHash());
     }
 
     @Test
@@ -53,7 +52,7 @@ public class UrlShortenerServiceImplTest {
         UrlMapping foundMapping = urlShortenerService.getFullUrl(HASH);
         verify(repository, times(1)).findByHash(HASH);
         Assertions.assertEquals(MAPPING.getFullUrl(), foundMapping.getFullUrl());
-        Assertions.assertEquals(MAPPING.getShortUrl(), foundMapping.getShortUrl());
+        Assertions.assertEquals(MAPPING.getHash(), foundMapping.getHash());
     }
 
     @Test

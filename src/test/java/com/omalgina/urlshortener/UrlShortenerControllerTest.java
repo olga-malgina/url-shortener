@@ -1,6 +1,6 @@
 package com.omalgina.urlshortener;
 
-import com.omalgina.urlshortener.controllers.UrlResolverController;
+import com.omalgina.urlshortener.controllers.UrlShortenerController;
 import com.omalgina.urlshortener.resources.UrlMapping;
 import com.omalgina.urlshortener.services.UrlShortenerService;
 import org.hamcrest.CoreMatchers;
@@ -14,14 +14,14 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-import static com.omalgina.urlshortener.controllers.UrlResolverController.FULL_URL;
-import static com.omalgina.urlshortener.controllers.UrlResolverController.HASH_URL;
+import static com.omalgina.urlshortener.controllers.UrlShortenerController.FULL_URL;
+import static com.omalgina.urlshortener.controllers.UrlShortenerController.HASH_URL;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 
-@WebMvcTest(controllers = UrlResolverController.class)
+@WebMvcTest(controllers = UrlShortenerController.class)
 @ExtendWith(MockitoExtension.class)
-public class UrlResolverControllerTest {
+public class UrlShortenerControllerTest {
 
     @MockBean
     UrlShortenerService urlShortenerService;
@@ -32,9 +32,9 @@ public class UrlResolverControllerTest {
     final String URL = "www.test.com";
     final String HASH = "hash62";
     final String HASH_NOT_FOUND = "hash";
-    final UrlMapping mapping = new UrlMapping(URL, HASH);
+    final UrlMapping mapping = new UrlMapping(HASH, URL);
 
-    public UrlResolverControllerTest() {
+    public UrlShortenerControllerTest() {
     }
 
     @Test
@@ -43,7 +43,7 @@ public class UrlResolverControllerTest {
         ResultActions response = mockMvc.perform(get(HASH_URL + "?url=" + URL));
         response.andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.properties.fullUrl", CoreMatchers.is(mapping.getFullUrl())))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.properties.shortUrl", CoreMatchers.is(mapping.getShortUrl())));
+                .andExpect(MockMvcResultMatchers.jsonPath("$.properties.hash", CoreMatchers.is(mapping.getHash())));
     }
 
     @Test
@@ -52,7 +52,7 @@ public class UrlResolverControllerTest {
         ResultActions response = mockMvc.perform(get(FULL_URL + "?hash=" + HASH));
         response.andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.properties.fullUrl", CoreMatchers.is(mapping.getFullUrl())))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.properties.shortUrl", CoreMatchers.is(mapping.getShortUrl())));
+                .andExpect(MockMvcResultMatchers.jsonPath("$.properties.hash", CoreMatchers.is(mapping.getHash())));
     }
 
     @Test

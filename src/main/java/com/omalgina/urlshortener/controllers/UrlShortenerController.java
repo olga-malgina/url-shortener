@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
-public class UrlResolverController {
+public class UrlShortenerController {
 
     public static final String HASH_URL = "/mappings/hash";
     public static final String FULL_URL = "/mappings/full-url";
