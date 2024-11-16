@@ -1,0 +1,6 @@
+This is a proof-of-concept RESTful application that provides short hash for submitted url and vice versa.
+Response to both types of requests is a UrlMapping class that contains both full url and hash.
+
+API documentation (exposed endpoints, required parameters) is available at http://localhost:8080/mappings/swagger-ui/index.html#/
+
+Application is written in Java 17, using Spring Boot 3.3.5

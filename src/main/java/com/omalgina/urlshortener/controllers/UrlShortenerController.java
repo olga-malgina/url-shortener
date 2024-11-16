@@ -6,29 +6,52 @@ import com.google.code.siren4j.converter.ResourceConverter;
 import com.google.code.siren4j.error.Siren4JException;
 import com.omalgina.urlshortener.resources.UrlMapping;
 import com.omalgina.urlshortener.services.UrlShortenerService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
-@Controller
+@RestController
 public class UrlShortenerController {
 
-    public static final String HASH_URL = "/mappings/hash";
-    public static final String FULL_URL = "/mappings/full-url";
+    public static final String HASH_URL = "/hash";
+    public static final String FULL_URL = "/full-url";
 
     @Autowired
     UrlShortenerService urlShortenerService;
 
-    @GetMapping(path = HASH_URL)
+    @Operation(summary = "Get hash for an url")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Hash provided and saved if new",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = UrlMapping.class))}),
+            @ApiResponse(responseCode = "400", description = "Url not provided",
+                    content = @Content)
+    })
+    @GetMapping(HASH_URL)
     ResponseEntity<Entity> getHash(@RequestParam String url) throws Siren4JException {
         UrlMapping response = urlShortenerService.getUrlHash(url);
         return new ResponseEntity<>(convertToSirenEntity(response), HttpStatus.OK);
     }
 
-    @GetMapping(path = FULL_URL)
+    @Operation(summary = "Get full url from supplied hash")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Url found",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = UrlMapping.class))}),
+            @ApiResponse(responseCode = "400", description = "Hash not provided",
+                    content = @Content),
+            @ApiResponse(responseCode = "404", description = "Hash not found",
+                    content = @Content),
+    })
+    @GetMapping(FULL_URL)
     ResponseEntity<Entity> getFullUrl(@RequestParam String hash) throws Siren4JException {
         UrlMapping mapping = urlShortenerService.getFullUrl(hash);
         if (mapping == null) {
