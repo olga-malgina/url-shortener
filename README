@@ -3,5 +3,4 @@ Response to both types of requests is a UrlMapping class that contains both full
 
 API documentation (exposed endpoints, required parameters) is available at http://localhost:8080/mappings/swagger-ui/index.html#/
 
-Application is written in Java 17, using Spring Boot 3.3.5. H2 in-memory database is used as storage, data is not preserved
-between application launches and the database is empty upon launch (choice made due to the fact that it is POC)
+Application is written in Java 17, using Spring Boot 3.3.5. H2 in-memory database is used as storage, data is not preserved between application launches and the database is empty upon launch (choice made due to the fact that it is POC)
